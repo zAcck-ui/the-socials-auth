@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Socials — Join</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f0f14;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: #16161d;
+      padding: 2rem;
+      border-radius: 12px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    input {
+      background: #1f1f2b;
+      color: white;
+    }
+
+    button {
+      background: white;
+      color: black;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    p {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Join The Socials</h2>
+    <p>Start where conversations matter.</p>
+
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+
+    <button onclick="signUp()">Create Account</button>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const supabase = supabase.createClient(
+      "https://YOUR_PROJECT_ID.supabase.co",
+      "YOUR_PUBLIC_ANON_KEY"
+    );
+
+    async function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+
+      message.textContent = "Creating your account…";
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      if (error) {
+        message.textContent = error.message;
+      } else {
+        message.textContent = "Welcome ✨ Redirecting…";
+        setTimeout(() => {
+          window.location.href = "https://the-socials-001.webflow.io";
+        }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>
