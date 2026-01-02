@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Socials — Join</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; background:#0f0f14; color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+  .card { width:100%; max-width:380px; background:#16161d; padding:2rem; border-radius:12px; }
+  input, button { width:100%; padding:12px; margin-top:12px; border-radius:8px; border:none; }
+  input { background:#1f1f2b; color:white; }
+  button { background:white; color:black; font-weight:600; cursor:pointer; }
+  p { font-size:0.9rem; opacity:0.7; margin-top:1rem; text-align:center; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Join The Socials</h2>
+    <p>Start where conversations matter.</p>
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password (min 6 chars)" />
+    <button id="signup-btn">Create Account</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    // --- Supabase connection ---
+    const supabase = supabase.createClient(
+      "https://mynpnpjsouhanxemdvxe.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bnBucGpzb3VoYW54ZW1kdnhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNTIwMDgsImV4cCI6MjA4MjkyODAwOH0.pjCtT1ht2xnDF1o7A2D5CCAYTOzn8HUmIrBIwJ-yPcQ"
+    );
+
+    // --- Global signUp function ---
+    async function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+
+      // Validate input
+      if (!email || !password) {
+        message.textContent = "Email and password are required.";
+        return;
+      }
+      if (password.length < 6) {
+        message.textContent = "Password must be at least 6 characters.";
+        return;
+      }
+
+      message.textContent = "Creating your account…";
+
+      try {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+          message.textContent = error.message;
+        } else if (data.user) {
+          message.textContent = "Welcome ✨ Redirecting…";
+
+          // Optional: create a user profile in Supabase (simple example)
+          await supabase.from('user_profiles').insert([
+            { user_id: data.user.id, email: email, created_at: new Date() }
+          ]).catch(console.error);
+
+          setTimeout(() => {
+            window.location.href = "https://the-socials-001.webflow.io";
+          }, 1500);
+
+        } else {
+          message.textContent = "Unexpected error. Try again.";
+        }
+
+      } catch (err) {
+        message.textContent = "Network error. Check console.";
+        console.error(err);
+      }
+    }
+
+    // --- Wire the button properly ---
+    document.getElementById("signup-btn").addEventListener("click", signUp);
+  </script>
+</body>
+</html>
