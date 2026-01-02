@@ -79,9 +79,14 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const message = document.getElementById("message");
+      
+      if (!email || !password) {message.textContent = "Email and password are required";
+                                return;
+                               }
 
       message.textContent = "Creating your account…";
 
+      try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password
@@ -94,6 +99,12 @@
         setTimeout(() => {
           window.location.href = "https://the-socials-001.webflow.io";
         }, 1500);
+      } else {
+        message.textContent = "Oops. Something went wrong. Try again"
+    }
+      } catch (err) {
+        message.textConsole = "Network error";
+        consple.error(err);
       }
     }
   </script>
