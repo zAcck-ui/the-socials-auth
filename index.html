@@ -21,6 +21,7 @@
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password (min 6 chars)" />
     <button id="signup-btn">Create Account</button>
+    <button id="google-btn">Continue with Google</button>
     <p id="message"></p>
   </div>
 
@@ -78,6 +79,14 @@
 
     // --- Wire the button properly ---
     document.getElementById("signup-btn").addEventListener("click", signUp);
+    document.getElementById("google-btn").addEventListener("click", async () => {await
+      supabase.auth.signInWith0Auth({
+        provider: "google" ,
+        options: {
+          rediredtTo: "htttps://the-socials-001.webflow.io"
+        }
+      });
+    });
   </script>
 </body>
 </html>
